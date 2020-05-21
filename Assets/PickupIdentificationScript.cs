@@ -280,14 +280,13 @@ public class PickupIdentificationScript : MonoBehaviour
 		Toggleable = false;
 		ActiveBorder = true;
 		Playable = false;
-		Debug.LogFormat("[Pickup Identification #{0}] The pickup shown: {1}", moduleId, SeedPacketIdentifier[Unique[Stages]]);
-		if (SeedPacketIdentifier[Unique[Stages]].name == "Less Than Three") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup: <3", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Thin)" || SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Large)") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup: Odd Mushroom", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "20 20") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup: 20/20", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Blue Baby's Only Friend") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup: ???'s Only Friend", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Broken Shovel 2") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup: Broken Shovel", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup: Butter Bean / Wait What?", moduleId);
-		else Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup: {1}", moduleId, SeedPacketIdentifier[Unique[Stages]].name);
+		if (SeedPacketIdentifier[Unique[Stages]].name == "Less Than Three") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: <3", moduleId);
+		else if (SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Thin)" || SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Large)") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: Odd Mushroom", moduleId);
+		else if (SeedPacketIdentifier[Unique[Stages]].name == "20 20") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: 20/20", moduleId);
+		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Blue Baby's Only Friend") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: ???'s Only Friend", moduleId);
+		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Broken Shovel 2") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: Broken Shovel", moduleId);
+		else if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: Butter Bean / Wait What?", moduleId);
+		else Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: {1}", moduleId, SeedPacketIdentifier[Unique[Stages]].name);
 		SeedPacket.sprite = SeedPacketIdentifier[Unique[Stages]];
 		SeedPacket.material = ImageLighting[1];
 		Audio.PlaySoundAtTransform(Buffer[(Stages * 3) + ChapterNumber].name, transform);
@@ -340,7 +339,6 @@ public class PickupIdentificationScript : MonoBehaviour
 					AnotherAnotherShower.sprite = ThumbsUp;
 					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
 					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, ThumbsUp);
 					Module.HandlePass();
 					Animating1 = false;
 				}
@@ -372,7 +370,6 @@ public class PickupIdentificationScript : MonoBehaviour
 			else
 			{
 				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Debug.LogFormat("[Pickup Identification #{0}] ", moduleId );
 				Animating1 = true;
 				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
 				SecondMusic.Play();
@@ -440,7 +437,6 @@ public class PickupIdentificationScript : MonoBehaviour
 					AnotherAnotherShower.sprite = ThumbsUp;
 					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
 					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, ThumbsUp);
 					Module.HandlePass();
 					Animating1 = false;
 				}
@@ -472,7 +468,6 @@ public class PickupIdentificationScript : MonoBehaviour
 			else
 			{
 				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, DeathSprite);
 				Animating1 = true;
 				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
 				SecondMusic.Play();
@@ -540,7 +535,6 @@ public class PickupIdentificationScript : MonoBehaviour
 					AnotherAnotherShower.sprite = ThumbsUp;
 					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
 					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, ThumbsUp);
 					Module.HandlePass();
 					Animating1 = false;
 				}
@@ -572,7 +566,6 @@ public class PickupIdentificationScript : MonoBehaviour
 			else
 			{
 				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, DeathSprite);
 				Animating1 = true;
 				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
 				SecondMusic.Play();
@@ -640,7 +633,6 @@ public class PickupIdentificationScript : MonoBehaviour
 					AnotherAnotherShower.sprite = ThumbsUp;
 					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
 					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, ThumbsUp);
 					Module.HandlePass();
 					Animating1 = false;
 				}
@@ -672,7 +664,6 @@ public class PickupIdentificationScript : MonoBehaviour
 			else
 			{
 				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, DeathSprite);
 				Animating1 = true;
 				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
 				SecondMusic.Play();
@@ -740,7 +731,6 @@ public class PickupIdentificationScript : MonoBehaviour
 					AnotherAnotherShower.sprite = ThumbsUp;
 					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
 					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, ThumbsUp);
 					Module.HandlePass();
 					Animating1 = false;
 				}
@@ -772,7 +762,6 @@ public class PickupIdentificationScript : MonoBehaviour
 			else
 			{
 				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, DeathSprite);
 				Animating1 = true;
 				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
 				SecondMusic.Play();
@@ -840,7 +829,6 @@ public class PickupIdentificationScript : MonoBehaviour
 					AnotherAnotherShower.sprite = ThumbsUp;
 					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
 					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, ThumbsUp);
 					Module.HandlePass();
 					Animating1 = false;
 				}
@@ -872,7 +860,6 @@ public class PickupIdentificationScript : MonoBehaviour
 			else
 			{
 				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, DeathSprite);
 				Animating1 = true;
 				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
 				SecondMusic.Play();
@@ -940,7 +927,6 @@ public class PickupIdentificationScript : MonoBehaviour
 					AnotherAnotherShower.sprite = ThumbsUp;
 					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
 					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, ThumbsUp);
 					Module.HandlePass();
 					Animating1 = false;
 				}
@@ -972,7 +958,6 @@ public class PickupIdentificationScript : MonoBehaviour
 			else
 			{
 				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Debug.LogFormat("[Pickup Identification #{0}] {1}", moduleId, DeathSprite);
 				Animating1 = true;
 				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
 				SecondMusic.Play();
@@ -1178,7 +1163,8 @@ public class PickupIdentificationScript : MonoBehaviour
 				yield return "sendtochaterror The key is not yet pressable. Command was ignored";
 				yield break;
 			}
-			
+			yield return "solve";
+			yield return "strike";
 				Enter.OnInteract();
 		}
 		
