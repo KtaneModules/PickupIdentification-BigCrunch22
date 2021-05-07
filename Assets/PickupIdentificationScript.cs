@@ -51,6 +51,11 @@ public class PickupIdentificationScript : MonoBehaviour
 		new string[47] {"~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", "\"", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?"}
 	};
 	
+	string[][] SameText = new string[2][]{
+		new string[] {"Less Than Three", "Odd Mushroom (Thin)", "Odd Mushroom (Large)", "20 20", "Collectible Blue Baby's Only Friend", "Collectible Broken Shovel 2", "Options Question"},
+		new string[] {"<3", "Odd Mushroom", "Odd Mushroom", "20/20", "???'s Only Friend", "Broken Shovel", "Options?"}
+	};
+	
 	int[] Unique = {0, 0, 0};
 	
 	bool Playable = false;
@@ -280,12 +285,8 @@ public class PickupIdentificationScript : MonoBehaviour
 		Toggleable = false;
 		ActiveBorder = true;
 		Playable = false;
-		if (SeedPacketIdentifier[Unique[Stages]].name == "Less Than Three") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: <3", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Thin)" || SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Large)") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: Odd Mushroom", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "20 20") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: 20/20", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Blue Baby's Only Friend") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: ???'s Only Friend", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Broken Shovel 2") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: Broken Shovel", moduleId);
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: Butter Bean / Wait What?", moduleId);
+		if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean") Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: Butter Bean / Wait What?", moduleId);
+		else if (new[] {SeedPacketIdentifier[Unique[Stages]].name}.Any(x => SameText[0].Contains(x))) Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: {1}", moduleId, SameText[1][Array.IndexOf(SameText[0], SeedPacketIdentifier[Unique[Stages]].name)]);
 		else Debug.LogFormat("[Pickup Identification #{0}] The name of the pickup shown: {1}", moduleId, SeedPacketIdentifier[Unique[Stages]].name);
 		SeedPacket.sprite = SeedPacketIdentifier[Unique[Stages]];
 		SeedPacket.material = ImageLighting[1];
@@ -303,499 +304,107 @@ public class PickupIdentificationScript : MonoBehaviour
 		string Analysis = TextBox.text;
 		TextBox.text = "";
 		Debug.LogFormat("[Pickup Identification #{0}] Text that was submitted: {1}", moduleId, Analysis);
-		if (SeedPacketIdentifier[Unique[Stages]].name == "Less Than Three")
-		{
-			if (Analysis  == "<3")
-			{
-				Stages++;
-				Playable = false;
-				Enterable = false;
-				if (Stages == 3)
-				{
-					Animating1 = true;
-					Debug.LogFormat("[Pickup Identification #{0}] You solved the module three times in a row. GG!", moduleId);
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					SecondMusic.clip = NotBuffer[8];
-					SecondMusic.Play();
-					StartCoroutine(RoulleteToWin());
-					while (SecondMusic.isPlaying)
-					{
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[1];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[1];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[1];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-					}
-					LightBulbs[0].material = TheLights[1];
-					LightBulbs[1].material = TheLights[1];
-					LightBulbs[2].material = TheLights[1];
-					AnotherAnotherShower.sprite = ThumbsUp;
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
-					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Module.HandlePass();
-					Animating1 = false;
-				}
-			
-				else
-				{
-					Debug.LogFormat("[Pickup Identification #{0}] The text matches the name of the pickup. Good job!", moduleId);
-					Animating1 = true;
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					AnotherShower.sprite = SeedPacketIdentifier[Unique[Stages-1]];
-					int Decider = UnityEngine.Random.Range(0,2); if (Decider == 1) SecondMusic.clip = NotBuffer[2];  else SecondMusic.clip = NotBuffer[4];
-					SecondMusic.Play();
-					while (SecondMusic.isPlaying)
-					{
-						yield return new WaitForSecondsRealtime(0.075f);
-					}
-					ChapterNumber = UnityEngine.Random.Range(0, 3);
-					BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-					BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-					LightBulbs[Stages-1].material = TheLights[1];
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[2].SetActive(true); IShow[3].SetActive(true);
-					SeedPacket.sprite = DefaultSprite;
-					Playable = true;
-					Toggleable = true;
-					Animating1 = false;
-				}
-			}
-			
-			else
-			{
-				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Animating1 = true;
-				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
-				SecondMusic.Play();
-				Enterable = false;
-				IShow[2].SetActive(false); IShow[3].SetActive(false); IShow[4].SetActive(true);
-				LightBulbs[0].material = TheLights[2];
-				LightBulbs[1].material = TheLights[2];
-				LightBulbs[2].material = TheLights[2];
-				Debug.LogFormat("[Pickup Identification #{0}] You died!", moduleId);
-				while (SecondMusic.isPlaying)
-				{
-					yield return new WaitForSecondsRealtime(0.075f);
-				}
-				ChapterNumber = UnityEngine.Random.Range(0, 3);
-				SeedPacket.sprite = DefaultSprite;
-				IShow[2].SetActive(true); IShow[3].SetActive(true); IShow[4].SetActive(false);
-				LightBulbs[0].material = TheLights[0];
-				LightBulbs[1].material = TheLights[0];
-				LightBulbs[2].material = TheLights[0];
-				Playable = true;
-				Toggleable = true;
-				Animating1 = false;
-				Stages = 0;
-				BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-				BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-				Module.HandleStrike();
-				Debug.LogFormat("[Pickup Identification #{0}] The module resetted and striked as a cost for giving an incorrect answer.", moduleId);
-				UniquePlay();
-			}
-		}
-		
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Thin)" || SeedPacketIdentifier[Unique[Stages]].name == "Odd Mushroom (Large)")
-		{
-			if (Analysis  == "Odd Mushroom")
-			{
-				Stages++;
-				Playable = false;
-				Enterable = false;
-				if (Stages == 3)
-				{
-					Animating1 = true;
-					Debug.LogFormat("[Pickup Identification #{0}] You solved the module three times in a row. GG!", moduleId);
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					SecondMusic.clip = NotBuffer[8];
-					SecondMusic.Play();
-					StartCoroutine(RoulleteToWin());
-					while (SecondMusic.isPlaying)
-					{
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[1];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[1];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[1];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-					}
-					LightBulbs[0].material = TheLights[1];
-					LightBulbs[1].material = TheLights[1];
-					LightBulbs[2].material = TheLights[1];
-					AnotherAnotherShower.sprite = ThumbsUp;
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
-					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Module.HandlePass();
-					Animating1 = false;
-				}
-			
-				else
-				{
-					Debug.LogFormat("[Pickup Identification #{0}] The text matches the name of the pickup. Good job!", moduleId);
-					Animating1 = true;
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					AnotherShower.sprite = SeedPacketIdentifier[Unique[Stages-1]];
-					int Decider = UnityEngine.Random.Range(0,2); if (Decider == 1) SecondMusic.clip = NotBuffer[2];  else SecondMusic.clip = NotBuffer[4];
-					SecondMusic.Play();
-					while (SecondMusic.isPlaying)
-					{
-						yield return new WaitForSecondsRealtime(0.075f);
-					}
-					ChapterNumber = UnityEngine.Random.Range(0, 3);
-					BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-					BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-					LightBulbs[Stages-1].material = TheLights[1];
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[2].SetActive(true); IShow[3].SetActive(true);
-					SeedPacket.sprite = DefaultSprite;
-					Playable = true;
-					Toggleable = true;
-					Animating1 = false;
-				}
-			}
-			
-			else
-			{
-				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Animating1 = true;
-				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
-				SecondMusic.Play();
-				Enterable = false;
-				IShow[2].SetActive(false); IShow[3].SetActive(false); IShow[4].SetActive(true);
-				LightBulbs[0].material = TheLights[2];
-				LightBulbs[1].material = TheLights[2];
-				LightBulbs[2].material = TheLights[2];
-				Debug.LogFormat("[Pickup Identification #{0}] You died!", moduleId);
-				while (SecondMusic.isPlaying)
-				{
-					yield return new WaitForSecondsRealtime(0.075f);
-				}
-				ChapterNumber = UnityEngine.Random.Range(0, 3);
-				SeedPacket.sprite = DefaultSprite;
-				IShow[2].SetActive(true); IShow[3].SetActive(true); IShow[4].SetActive(false);
-				LightBulbs[0].material = TheLights[0];
-				LightBulbs[1].material = TheLights[0];
-				LightBulbs[2].material = TheLights[0];
-				Playable = true;
-				Toggleable = true;
-				Animating1 = false;
-				Stages = 0;
-				BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-				BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-				Module.HandleStrike();
-				Debug.LogFormat("[Pickup Identification #{0}] The module resetted and striked as a cost for giving an incorrect answer.", moduleId);
-				UniquePlay();
-			}
-		}
-		
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "20 20")
-		{
-			if (Analysis  == "20/20")
-			{
-				Stages++;
-				Playable = false;
-				Enterable = false;
-				if (Stages == 3)
-				{
-					Animating1 = true;
-					Debug.LogFormat("[Pickup Identification #{0}] You solved the module three times in a row. GG!", moduleId);
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					SecondMusic.clip = NotBuffer[8];
-					SecondMusic.Play();
-					StartCoroutine(RoulleteToWin());
-					while (SecondMusic.isPlaying)
-					{
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[1];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[1];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[1];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-					}
-					LightBulbs[0].material = TheLights[1];
-					LightBulbs[1].material = TheLights[1];
-					LightBulbs[2].material = TheLights[1];
-					AnotherAnotherShower.sprite = ThumbsUp;
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
-					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Module.HandlePass();
-					Animating1 = false;
-				}
-			
-				else
-				{
-					Debug.LogFormat("[Pickup Identification #{0}] The text matches the name of the pickup. Good job!", moduleId);
-					Animating1 = true;
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					AnotherShower.sprite = SeedPacketIdentifier[Unique[Stages-1]];
-					int Decider = UnityEngine.Random.Range(0,2); if (Decider == 1) SecondMusic.clip = NotBuffer[2];  else SecondMusic.clip = NotBuffer[4];
-					SecondMusic.Play();
-					while (SecondMusic.isPlaying)
-					{
-						yield return new WaitForSecondsRealtime(0.075f);
-					}
-					ChapterNumber = UnityEngine.Random.Range(0, 3);
-					BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-					BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-					LightBulbs[Stages-1].material = TheLights[1];
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[2].SetActive(true); IShow[3].SetActive(true);
-					SeedPacket.sprite = DefaultSprite;
-					Playable = true;
-					Toggleable = true;
-					Animating1 = false;
-				}
-			}
-			
-			else
-			{
-				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Animating1 = true;
-				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
-				SecondMusic.Play();
-				Enterable = false;
-				IShow[2].SetActive(false); IShow[3].SetActive(false); IShow[4].SetActive(true);
-				LightBulbs[0].material = TheLights[2];
-				LightBulbs[1].material = TheLights[2];
-				LightBulbs[2].material = TheLights[2];
-				Debug.LogFormat("[Pickup Identification #{0}] You died!", moduleId);
-				while (SecondMusic.isPlaying)
-				{
-					yield return new WaitForSecondsRealtime(0.075f);
-				}
-				ChapterNumber = UnityEngine.Random.Range(0, 3);
-				SeedPacket.sprite = DefaultSprite;
-				IShow[2].SetActive(true); IShow[3].SetActive(true); IShow[4].SetActive(false);
-				LightBulbs[0].material = TheLights[0];
-				LightBulbs[1].material = TheLights[0];
-				LightBulbs[2].material = TheLights[0];
-				Playable = true;
-				Toggleable = true;
-				Animating1 = false;
-				Stages = 0;
-				BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-				BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-				Module.HandleStrike();
-				Debug.LogFormat("[Pickup Identification #{0}] The module resetted and striked as a cost for giving an incorrect answer.", moduleId);
-				UniquePlay();
-			}
-		}
-		
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Blue Baby's Only Friend")
-		{
-			if (Analysis  == "???'s Only Friend")
-			{
-				Stages++;
-				Playable = false;
-				Enterable = false;
-				if (Stages == 3)
-				{
-					Animating1 = true;
-					Debug.LogFormat("[Pickup Identification #{0}] You solved the module three times in a row. GG!", moduleId);
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					SecondMusic.clip = NotBuffer[8];
-					SecondMusic.Play();
-					StartCoroutine(RoulleteToWin());
-					while (SecondMusic.isPlaying)
-					{
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[1];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[1];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[1];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-					}
-					LightBulbs[0].material = TheLights[1];
-					LightBulbs[1].material = TheLights[1];
-					LightBulbs[2].material = TheLights[1];
-					AnotherAnotherShower.sprite = ThumbsUp;
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
-					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Module.HandlePass();
-					Animating1 = false;
-				}
-			
-				else
-				{
-					Debug.LogFormat("[Pickup Identification #{0}] The text matches the name of the pickup. Good job!", moduleId);
-					Animating1 = true;
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					AnotherShower.sprite = SeedPacketIdentifier[Unique[Stages-1]];
-					int Decider = UnityEngine.Random.Range(0,2); if (Decider == 1) SecondMusic.clip = NotBuffer[2];  else SecondMusic.clip = NotBuffer[4];
-					SecondMusic.Play();
-					while (SecondMusic.isPlaying)
-					{
-						yield return new WaitForSecondsRealtime(0.075f);
-					}
-					ChapterNumber = UnityEngine.Random.Range(0, 3);
-					BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-					BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-					LightBulbs[Stages-1].material = TheLights[1];
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[2].SetActive(true); IShow[3].SetActive(true);
-					SeedPacket.sprite = DefaultSprite;
-					Playable = true;
-					Toggleable = true;
-					Animating1 = false;
-				}
-			}
-			
-			else
-			{
-				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Animating1 = true;
-				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
-				SecondMusic.Play();
-				Enterable = false;
-				IShow[2].SetActive(false); IShow[3].SetActive(false); IShow[4].SetActive(true);
-				LightBulbs[0].material = TheLights[2];
-				LightBulbs[1].material = TheLights[2];
-				LightBulbs[2].material = TheLights[2];
-				Debug.LogFormat("[Pickup Identification #{0}] You died!", moduleId);
-				while (SecondMusic.isPlaying)
-				{
-					yield return new WaitForSecondsRealtime(0.075f);
-				}
-				ChapterNumber = UnityEngine.Random.Range(0, 3);
-				SeedPacket.sprite = DefaultSprite;
-				IShow[2].SetActive(true); IShow[3].SetActive(true); IShow[4].SetActive(false);
-				LightBulbs[0].material = TheLights[0];
-				LightBulbs[1].material = TheLights[0];
-				LightBulbs[2].material = TheLights[0];
-				Playable = true;
-				Toggleable = true;
-				Animating1 = false;
-				Stages = 0;
-				BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-				BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-				Module.HandleStrike();
-				Debug.LogFormat("[Pickup Identification #{0}] The module resetted and striked as a cost for giving an incorrect answer.", moduleId);
-				UniquePlay();
-			}
-		}
-		
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Collectible Broken Shovel 2")
-		{
-			if (Analysis  == "Broken Shovel")
-			{
-				Stages++;
-				Playable = false;
-				Enterable = false;
-				if (Stages == 3)
-				{
-					Animating1 = true;
-					Debug.LogFormat("[Pickup Identification #{0}] You solved the module three times in a row. GG!", moduleId);
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					SecondMusic.clip = NotBuffer[8];
-					SecondMusic.Play();
-					StartCoroutine(RoulleteToWin());
-					while (SecondMusic.isPlaying)
-					{
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[1];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[0];
-						LightBulbs[1].material = TheLights[1];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-						LightBulbs[0].material = TheLights[1];
-						LightBulbs[1].material = TheLights[0];
-						LightBulbs[2].material = TheLights[0];
-						yield return new WaitForSecondsRealtime(0.02f);
-					}
-					LightBulbs[0].material = TheLights[1];
-					LightBulbs[1].material = TheLights[1];
-					LightBulbs[2].material = TheLights[1];
-					AnotherAnotherShower.sprite = ThumbsUp;
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
-					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
-					Module.HandlePass();
-					Animating1 = false;
-				}
-			
-				else
-				{
-					Debug.LogFormat("[Pickup Identification #{0}] The text matches the name of the pickup. Good job!", moduleId);
-					Animating1 = true;
-					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
-					AnotherShower.sprite = SeedPacketIdentifier[Unique[Stages-1]];
-					int Decider = UnityEngine.Random.Range(0,2); if (Decider == 1) SecondMusic.clip = NotBuffer[2];  else SecondMusic.clip = NotBuffer[4];
-					SecondMusic.Play();
-					while (SecondMusic.isPlaying)
-					{
-						yield return new WaitForSecondsRealtime(0.075f);
-					}
-					ChapterNumber = UnityEngine.Random.Range(0, 3);
-					BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-					BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-					LightBulbs[Stages-1].material = TheLights[1];
-					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[2].SetActive(true); IShow[3].SetActive(true);
-					SeedPacket.sprite = DefaultSprite;
-					Playable = true;
-					Toggleable = true;
-					Animating1 = false;
-				}
-			}
-			
-			else
-			{
-				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
-				Animating1 = true;
-				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
-				SecondMusic.Play();
-				Enterable = false;
-				IShow[2].SetActive(false); IShow[3].SetActive(false); IShow[4].SetActive(true);
-				LightBulbs[0].material = TheLights[2];
-				LightBulbs[1].material = TheLights[2];
-				LightBulbs[2].material = TheLights[2];
-				Debug.LogFormat("[Pickup Identification #{0}] You died!", moduleId);
-				while (SecondMusic.isPlaying)
-				{
-					yield return new WaitForSecondsRealtime(0.075f);
-				}
-				ChapterNumber = UnityEngine.Random.Range(0, 3);
-				SeedPacket.sprite = DefaultSprite;
-				IShow[2].SetActive(true); IShow[3].SetActive(true); IShow[4].SetActive(false);
-				LightBulbs[0].material = TheLights[0];
-				LightBulbs[1].material = TheLights[0];
-				LightBulbs[2].material = TheLights[0];
-				Playable = true;
-				Toggleable = true;
-				Animating1 = false;
-				Stages = 0;
-				BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
-				BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
-				Module.HandleStrike();
-				Debug.LogFormat("[Pickup Identification #{0}] The module resetted and striked as a cost for giving an incorrect answer.", moduleId);
-				UniquePlay();
-			}
-		}
-		
-		else if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean")
+		if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean")
 		{
 			if (Analysis  == "Wait What?" || Analysis  == "Butter Bean")
+			{
+				Stages++;
+				Playable = false;
+				Enterable = false;
+				if (Stages == 3)
+				{
+					Animating1 = true;
+					Debug.LogFormat("[Pickup Identification #{0}] You solved the module three times in a row. GG!", moduleId);
+					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
+					SecondMusic.clip = NotBuffer[8];
+					SecondMusic.Play();
+					StartCoroutine(RoulleteToWin());
+					while (SecondMusic.isPlaying)
+					{
+						LightBulbs[0].material = TheLights[0];
+						LightBulbs[1].material = TheLights[0];
+						LightBulbs[2].material = TheLights[1];
+						yield return new WaitForSecondsRealtime(0.02f);
+						LightBulbs[0].material = TheLights[0];
+						LightBulbs[1].material = TheLights[1];
+						LightBulbs[2].material = TheLights[0];
+						yield return new WaitForSecondsRealtime(0.02f);
+						LightBulbs[0].material = TheLights[1];
+						LightBulbs[1].material = TheLights[0];
+						LightBulbs[2].material = TheLights[0];
+						yield return new WaitForSecondsRealtime(0.02f);
+					}
+					LightBulbs[0].material = TheLights[1];
+					LightBulbs[1].material = TheLights[1];
+					LightBulbs[2].material = TheLights[1];
+					AnotherAnotherShower.sprite = ThumbsUp;
+					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[4].SetActive(true);
+					Debug.LogFormat("[Pickup Identification #{0}] The module is done.", moduleId);
+					Module.HandlePass();
+					Animating1 = false;
+				}
+			
+				else
+				{
+					Debug.LogFormat("[Pickup Identification #{0}] The text matches the name of the pickup. Good job!", moduleId);
+					Animating1 = true;
+					IShow[0].SetActive(true); IShow[1].SetActive(true); IShow[2].SetActive(false); IShow[3].SetActive(false);
+					AnotherShower.sprite = SeedPacketIdentifier[Unique[Stages-1]];
+					int Decider = UnityEngine.Random.Range(0,2); if (Decider == 1) SecondMusic.clip = NotBuffer[2];  else SecondMusic.clip = NotBuffer[4];
+					SecondMusic.Play();
+					while (SecondMusic.isPlaying)
+					{
+						yield return new WaitForSecondsRealtime(0.075f);
+					}
+					ChapterNumber = UnityEngine.Random.Range(0, 3);
+					BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
+					BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
+					LightBulbs[Stages-1].material = TheLights[1];
+					IShow[0].SetActive(false); IShow[1].SetActive(false); IShow[2].SetActive(true); IShow[3].SetActive(true);
+					SeedPacket.sprite = DefaultSprite;
+					Playable = true;
+					Toggleable = true;
+					Animating1 = false;
+				}
+			}
+			
+			else
+			{
+				Debug.LogFormat("[Pickup Identification #{0}] The text does not match the name of the pickup. Oh no!", moduleId);
+				Animating1 = true;
+				SecondMusic.clip = NotBuffer[5 + UnityEngine.Random.Range(0, 3)];
+				SecondMusic.Play();
+				Enterable = false;
+				IShow[2].SetActive(false); IShow[3].SetActive(false); IShow[4].SetActive(true);
+				LightBulbs[0].material = TheLights[2];
+				LightBulbs[1].material = TheLights[2];
+				LightBulbs[2].material = TheLights[2];
+				Debug.LogFormat("[Pickup Identification #{0}] You died!", moduleId);
+				while (SecondMusic.isPlaying)
+				{
+					yield return new WaitForSecondsRealtime(0.075f);
+				}
+				ChapterNumber = UnityEngine.Random.Range(0, 3);
+				SeedPacket.sprite = DefaultSprite;
+				IShow[2].SetActive(true); IShow[3].SetActive(true); IShow[4].SetActive(false);
+				LightBulbs[0].material = TheLights[0];
+				LightBulbs[1].material = TheLights[0];
+				LightBulbs[2].material = TheLights[0];
+				Playable = true;
+				Toggleable = true;
+				Animating1 = false;
+				Stages = 0;
+				BorderAndTile[0].material = Chapters[(Stages * 3) + ChapterNumber];
+				BorderAndTile[1].material = Chapters[(Stages * 3) + ChapterNumber];
+				Module.HandleStrike();
+				Debug.LogFormat("[Pickup Identification #{0}] The module resetted and striked as a cost for giving an incorrect answer.", moduleId);
+				UniquePlay();
+			}
+		}
+		
+		else if (new[] {SeedPacketIdentifier[Unique[Stages]].name}.Any(x => SameText[0].Contains(x)))
+		{
+			if (Analysis  == SameText[1][Array.IndexOf(SameText[0], SeedPacketIdentifier[Unique[Stages]].name)])
 			{
 				Stages++;
 				Playable = false;
