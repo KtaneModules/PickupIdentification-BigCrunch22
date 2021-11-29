@@ -51,6 +51,29 @@ public class PickupIdentificationScript : MonoBehaviour
 		new string[47] {"~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", "\"", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?"}
 	};
 	
+		private KeyCode[] TypableKeys =
+	{
+		KeyCode.BackQuote, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9, KeyCode.Alpha0, KeyCode.Minus, KeyCode.Equals,
+		KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.Y, KeyCode.U, KeyCode.I, KeyCode.O, KeyCode.P, KeyCode.LeftBracket, KeyCode.RightBracket, KeyCode.Backslash,
+		KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F, KeyCode.G, KeyCode.H, KeyCode.J, KeyCode.K, KeyCode.L, KeyCode.Semicolon, KeyCode.Quote,
+		KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.V, KeyCode.B, KeyCode.N, KeyCode.M, KeyCode.Comma, KeyCode.Period, KeyCode.Slash,
+	};
+	
+	private KeyCode[] ShiftKeys =
+	{
+		KeyCode.LeftShift, KeyCode.RightShift,
+	};
+	
+	private KeyCode[] UselessKeys =
+	{
+		KeyCode.Tab, KeyCode.CapsLock, KeyCode.LeftControl, KeyCode.LeftWindows,  KeyCode.LeftAlt, KeyCode.RightAlt, KeyCode.RightWindows, KeyCode.Menu, KeyCode.RightControl,
+	};
+	
+	private KeyCode[] OtherKeys =
+	{
+		KeyCode.Backspace, KeyCode.Return, KeyCode.Space,
+	};
+	
 	string[][] SameText = new string[2][]{
 		new string[] {"Less Than Three", "Odd Mushroom (Thin)", "Odd Mushroom (Large)", "20 20", "Collectible Blue Baby's Only Friend", "Collectible Broken Shovel 2", "Options Question"},
 		new string[] {"<3", "Odd Mushroom", "Odd Mushroom", "20/20", "???'s Only Friend", "Broken Shovel", "Options?"}
@@ -61,6 +84,7 @@ public class PickupIdentificationScript : MonoBehaviour
 	bool Playable = false;
 	bool Enterable = false;
 	bool Toggleable = true;
+	private bool focused;
 	int Stages = 0;
 	
 	int ChapterNumber;
@@ -108,6 +132,10 @@ public class PickupIdentificationScript : MonoBehaviour
 		Enter.OnInteract += delegate () { PressEnter(); return false; };
 		SpaceBar.OnInteract += delegate () { PressSpaceBar(); return false; };
 		Border.OnInteract += delegate () { PressBorder(); return false; };
+		GetComponent<KMSelectable>().OnFocus += delegate () { focused = true; };
+		GetComponent<KMSelectable>().OnDefocus += delegate () { focused = false; };
+		if (Application.isEditor)
+			focused = true;
 	}
 	
 	
@@ -607,6 +635,51 @@ public class PickupIdentificationScript : MonoBehaviour
 			{
 				AnotherShower.sprite = SeedPacketIdentifier[Unique[x]];
 				yield return new WaitForSecondsRealtime(0.2f);
+			}
+		}
+	}
+	
+	void Update()
+	{
+		if (focused)
+		{
+			for (int i = 0; i < TypableKeys.Count(); i++)
+			{
+				if (Input.GetKeyDown(TypableKeys[i]))
+				{
+					TypableText[i].OnInteract();
+				}
+			}
+			for (int j = 0; j < ShiftKeys.Count(); j++)
+			{
+				if (Input.GetKeyDown(ShiftKeys[j]))
+				{
+					ShiftButtons[j].OnInteract();
+				}
+			}
+			for (int k = 0; k < UselessKeys.Count(); k++)
+			{
+				if (Input.GetKeyDown(UselessKeys[k]))
+				{
+					UselessButtons[k].OnInteract();
+				}
+			}
+			for (int l = 0; l < OtherKeys.Count(); l++)
+			{
+				if (Input.GetKeyDown(OtherKeys[l]))
+				{
+					switch (l)
+					{
+						case 0:
+							Backspace.OnInteract(); break;
+						case 1:
+							Enter.OnInteract(); break;
+						case 2:
+							SpaceBar.OnInteract(); break;
+						default:
+							break;
+					}
+				}
 			}
 		}
 	}
