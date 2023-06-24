@@ -242,7 +242,7 @@ public class PickupIdentificationScript : MonoBehaviour
 			}
 			width =  width * TextBox.characterSize * 0.1f;
 			
-			if (width < 0.28f)
+			if (width < 0.28f && TextBox.text[TextBox.text.Length - 1].ToString() != " ")
 			{
 				TextBox.text += " ";
 				if (width > 0.28)
@@ -322,12 +322,16 @@ public class PickupIdentificationScript : MonoBehaviour
 	
 	IEnumerator TheCorrect()
 	{
+		if (TextBox.text[TextBox.text.Length - 1].ToString() == " ")
+		{
+			TextBox.text.Remove(TextBox.text.Length);
+		}
 		string Analysis = TextBox.text;
 		TextBox.text = "";
 		Debug.LogFormat("[Pickup Identification #{0}] Text that was submitted: {1}", moduleId, Analysis);
 		if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean")
 		{
-			if (Analysis  == "Wait What?" || Analysis  == "Butter Bean")
+			if (Analysis == "Wait What?" || Analysis  == "Butter Bean")
 			{
 				Stages++;
 				Playable = false;
@@ -425,7 +429,7 @@ public class PickupIdentificationScript : MonoBehaviour
 		
 		else if (new[] {SeedPacketIdentifier[Unique[Stages]].name}.Any(x => SameText[0].Contains(x)))
 		{
-			if (Analysis  == SameText[1][Array.IndexOf(SameText[0], SeedPacketIdentifier[Unique[Stages]].name)])
+			if (Analysis == SameText[1][Array.IndexOf(SameText[0], SeedPacketIdentifier[Unique[Stages]].name)])
 			{
 				Stages++;
 				Playable = false;
@@ -523,7 +527,7 @@ public class PickupIdentificationScript : MonoBehaviour
 		
 		else
 		{
-			if (Analysis  == SeedPacketIdentifier[Unique[Stages]].name)
+			if (Analysis == SeedPacketIdentifier[Unique[Stages]].name)
 			{
 				Stages++;
 				Playable = false;
