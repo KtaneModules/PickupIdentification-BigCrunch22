@@ -324,7 +324,7 @@ public class PickupIdentificationScript : MonoBehaviour
 	{
 		if (TextBox.text[TextBox.text.Length - 1].ToString() == " ")
 		{
-			TextBox.text.Remove(TextBox.text.Length);
+			TextBox.text = TextBox.text.Remove(TextBox.text.Length - 1);
 		}
 		string Analysis = TextBox.text;
 		TextBox.text = "";
