@@ -326,7 +326,7 @@ public class PickupIdentificationScript : MonoBehaviour
 		{
 			TextBox.text = TextBox.text.Remove(TextBox.text.Length - 1);
 		}
-		string Analysis = TextBox.text;
+		string Analysis = TextBox.text.Replace('’', '\'').Replace('`', '\'').Replace('‘', '\'').Replace('´', '\'');
 		TextBox.text = "";
 		Debug.LogFormat("[Pickup Identification #{0}] Text that was submitted: {1}", moduleId, Analysis);
 		if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean")
