@@ -242,7 +242,7 @@ public class PickupIdentificationScript : MonoBehaviour
 			}
 			width =  width * TextBox.characterSize * 0.1f;
 			
-			if (width < 0.28f && TextBox.text[TextBox.text.Length - 1].ToString() != " ")
+			if (width < 0.28f && TextBox.text.Length != 0 && TextBox.text[TextBox.text.Length - 1].ToString() != " ")
 			{
 				TextBox.text += " ";
 				if (width > 0.28)
@@ -322,11 +322,9 @@ public class PickupIdentificationScript : MonoBehaviour
 	
 	IEnumerator TheCorrect()
 	{
-		if (TextBox.text[TextBox.text.Length - 1].ToString() == " ")
-		{
+		if (TextBox.text.Length != 0 && TextBox.text[TextBox.text.Length - 1].ToString() == " ")
 			TextBox.text = TextBox.text.Remove(TextBox.text.Length - 1);
-		}
-		string Analysis = TextBox.text.Replace('’', '\'').Replace('`', '\'').Replace('‘', '\'').Replace('´', '\'');
+		string Analysis = TextBox.text.Replace('`', '\'');
 		TextBox.text = "";
 		Debug.LogFormat("[Pickup Identification #{0}] Text that was submitted: {1}", moduleId, Analysis);
 		if (SeedPacketIdentifier[Unique[Stages]].name == "Wait What" || SeedPacketIdentifier[Unique[Stages]].name == "Butter Bean")
